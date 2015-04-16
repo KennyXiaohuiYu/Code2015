@@ -43,14 +43,14 @@ void SpellCastingSystem::SpellCasting(Player* caster, Player* target,
 		m_casterList.insert(caster);
 	} else {
 		//Caster can only cast one spell at a time
-		cout << caster->m_name << " in casting time." << endl;
+		//cout << caster->m_name << " in casting time." << endl;
 		return;
 	}
 }
 
 //Status refreshing method
 void SpellCastingSystem::Refresh(long tick) {
-	cout << "Loop: " << tick << endl;
+	//cout << "Loop: " << tick << endl;
 
 	//process actions which timeout.
 	while (!m_castingQueue.empty()) {
@@ -65,28 +65,32 @@ void SpellCastingSystem::Refresh(long tick) {
 
 		//if caster is alive then process, otherwise pop up and go to next action
 		if (c.m_caster->IsAlive()) {
-
-			//release caster from casting time players' list
-			m_casterList.erase(c.m_caster);
-
-			//if target is not alive, print status
+			//check if target is alive, otherwise no need to cast
 			if (c.m_target->IsAlive()) {
-				cout << c.m_target->m_name << " hit for " << c.m_spell->m_damage
-						<< " damage!" << endl;
+				if (m_casterList.find(c.m_caster) != m_casterList.end()) {
+
+					//release caster from casting time list
+					m_casterList.erase(c.m_caster);
+
+					cout << c.m_caster->m_name << " casted " << c.m_target->m_name
+							<< ", cause " << c.m_spell->m_damage
+							<< " immediate damage!" << endl;
+					//record damage
+					c.m_target->m_hp -= c.m_spell->m_damage;
+					//if target is dead, release all pending spells by releasing all its casters.
+					if (!c.m_target->IsAlive()) {
+						ReleaseCaster(c.m_target);
+						cout << c.m_target->m_name << " is dead." << endl;
+					}
+				} else
+					cout
+							<< "something wrong here, caster & target both alive, but caster is release from casting time list."
+							<< endl;
+			} else {
+				cout << "target is already dead, no need to cast." << endl;
 			}
-
-			//record damage
-			c.m_target->m_hp -= c.m_spell->m_damage;
-
-			//if target is dead, release all pending spells by releasing all its casters.
-			if (!c.m_target->IsAlive()) {
-				ReleaseCaster(c.m_target);
-				cout << c.m_target->m_name << " is dead." << endl;
-			}
-
 		} else {
 			cout << "caster is already dead" << endl;
-
 		}
 
 		m_castingQueue.pop();

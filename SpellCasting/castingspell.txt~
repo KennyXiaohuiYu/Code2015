@@ -1,9 +1,3 @@
-04/16/2015
-Bug fix:
-1. hp reduced even after target is dead.
-2. random function used in testing main() forgot to seed.
-
-04/15/2015
 Design about Casting Spell Game:
 Use three class to represent "Player", "Spell", and casting spell action ("CastSpell").
 The Spell Casting System, "SpellCastingSystem", is the game engine.

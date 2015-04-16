@@ -3,7 +3,6 @@
 #include <vector>
 #include <cstdlib>
 
-
 #include "Player.h"
 #include "CastSpell.h"
 #include "Player.h"
@@ -11,6 +10,7 @@
 using namespace std;
 
 int FindNextRandomTarget(int casterid, vector<Player*> &players);
+int FindNextRandomSpell(int spellsCount);
 
 int main(int argc, const char * argv[]) {
 	SpellCastingSystem* system = new SpellCastingSystem();
@@ -25,18 +25,19 @@ int main(int argc, const char * argv[]) {
 
 	//add players, can be as many as needed
 	vector<Player*> players;
-	players.push_back(new Player("Player 1", 50));
-	players.push_back(new Player("Player 2", 50));
-	players.push_back(new Player("Player 3", 50));
-	players.push_back(new Player("Player 4", 50));
-	players.push_back(new Player("Player 5", 50));
-	players.push_back(new Player("Player 6", 50));
+	players.push_back(new Player("Player 1", 80));
+	players.push_back(new Player("Player 2", 70));
+	players.push_back(new Player("Player 3", 90));
+	players.push_back(new Player("Player 4", 85));
+	players.push_back(new Player("Player 5", 75));
+	players.push_back(new Player("Player 6", 70));
 
 	//each loop on 1 tick
 	long tick = 0;
-	do{
+	srand(time(0));
+	do {
 		int alives = 0;
-		for (unsigned int i=0;i<players.size();i++)
+		for (unsigned int i = 0; i < players.size(); i++)
 			alives += players[i]->IsAlive();
 
 		//if only player is alive, then game over
@@ -44,41 +45,48 @@ int main(int argc, const char * argv[]) {
 			break;
 
 		//Each player has a chance to cast if it's alive.
-		for (unsigned int i=0; i<players.size(); i++){
-			if (players[i]->IsAlive()){
+		for (unsigned int i = 0; i < players.size(); i++) {
+			if (players[i]->IsAlive()) {
 
 				//Get a random target to cast
 				int targetid = FindNextRandomTarget(i, players);
 
 				//Get a random Spell to use
-				int spellid = rand() % spells.size();
+				int spellid = FindNextRandomSpell(spells.size());
 
 				//Play magic here
-				system->SpellCasting(players[i], players[targetid], spells[spellid], tick);
+				system->SpellCasting(players[i], players[targetid],
+						spells[spellid], tick);
 			}
 		}
 		system->Refresh(tick++);
-	}while (true);
+	} while (true);
 
 	//delete players new-ed in heap, otherwise memory leak.
-	for (unsigned int i=0;i<players.size();i++){
+	for (unsigned int i = 0; i < players.size(); i++) {
 		if (players[i]->IsAlive())
 			cout << "Winner is: " << players[i]->m_name << endl;
 		delete players[i];
 	}
 
 	//delete spells new-ed in heap, otherwise memory leak.
-	for (unsigned int i=0;i<spells.size();i++)
-			delete spells[i];
+	for (unsigned int i = 0; i < spells.size(); i++)
+		delete spells[i];
 
 	return 0;
 }
 
 //Find a next random target to cast spell
 //target must be alive and not caster itself
-int FindNextRandomTarget(int casterid, vector<Player*> &players){
+int FindNextRandomTarget(int casterid, vector<Player*> &players) {
+	//srand(time(0));
 	int targetid = rand() % players.size();
 	while (targetid == casterid || !players[targetid]->IsAlive())
-		targetid = (targetid+1) % players.size();
+		targetid = (targetid + 1) % players.size();
 	return targetid;
 }
+
+int FindNextRandomSpell(int spellsCount) {
+	return rand() % spellsCount;
+}
+
