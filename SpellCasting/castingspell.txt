@@ -1,0 +1,8 @@
+Design about Casting Spell Game:
+Use three class to represent "Player", "Spell", and casting spell action ("CastSpell").
+The Spell Casting System, "SpellCastingSystem", is the game engine.
+Game engine can deal with as many as spells as needed, but only one kind of spell as requirment.
+Game engine performs every casting spell actions.
+Game engine must be refresh every tick period to update the status.
+Only needed methods of above two are exposed to public.
+main function is a tester.
