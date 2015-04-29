@@ -7,73 +7,46 @@ using System.Collections;
 
 namespace BTreeSearchParent
 {
-    public class BNode
-    {
-        public int BValue { get; set; }
-        public BNode LeftNode { get; set; }
-        public BNode RightNode { get; set; }
-
-        public BNode(int node)
+    public class BNode : Node
+    {        
+        public BNode(int node) : base(node)
         {
-            BValue = node;
         }
 
-        public static BNode ParentFinder(BNode head, BNode leaf1, BNode leaf2)
+        public static Node BTreeParentFinder(Node head, Node leaf1, Node leaf2)
         {
-            Stack<BNode> sLeaf1 = new Stack<BNode>();
-            Stack<BNode> sLeaf2 = new Stack<BNode>();
-            if (!FoundLeaf(head, leaf1, ref sLeaf1) || !FoundLeaf(head, leaf2, ref sLeaf2))
-                return null;
-
-            Stack<BNode> sLeaf1Reverse = ReverseStack(sLeaf1);
-            Stack<BNode> sLeaf2Reverse = ReverseStack(sLeaf2);
-            BNode prePopped = null;
-            bool bFound = false;
-            while (sLeaf1Reverse.Any() && sLeaf2Reverse.Any())
+            if (leaf1.Value > leaf2.Value)
             {
-                BNode leaf1Parent = sLeaf1Reverse.Pop();
-                BNode leaf2Parent = sLeaf2Reverse.Pop();
-                if (leaf1Parent != leaf2Parent)
-                {
-                    bFound = true;
-                    break;
-                }                
-                prePopped = leaf1Parent;
+                Node temp = leaf1;
+                leaf1 = leaf2;
+                leaf2 = temp;
             }
-            if (bFound)
-                return prePopped;
 
-            return null;
+            if (head.Value < leaf1.Value)
+                return BTreeParentFinder(head.RightNode, leaf1, leaf2);
+            else if (head.Value > leaf2.Value)
+                return BTreeParentFinder(head.LeftNode, leaf1, leaf2);
+            else
+            {
+                if (FoundLeaf(head, leaf1) && FoundLeaf(head, leaf2))
+                    return head;
+                return null;
+            }
         }
 
 
-        public static bool FoundLeaf(BNode head, BNode leaf, ref Stack<BNode> stack)
+        public static bool FoundLeaf(Node head, Node leaf)
         {
             if (head == null)
                 return false;
 
-            stack.Push(head);
-            BNode curNode = head;
-
-            if (curNode.BValue == leaf.BValue)
+            if (head.Value == leaf.Value)
                 return true;
-            
-            if (FoundLeaf(curNode.LeftNode, leaf, ref stack))
-                return true;
-
-            if (FoundLeaf(curNode.RightNode, leaf, ref stack))
-                return true;
-
-            stack.Pop();
-            return false;
+            else if (head.Value < leaf.Value)
+                return FoundLeaf(head.RightNode, leaf);
+            else
+                return FoundLeaf(head.LeftNode, leaf);
         }
 
-        public static Stack<BNode> ReverseStack(Stack<BNode> stack)
-        {
-            Stack<BNode> sReverse = new Stack<BNode>();
-            while (stack.Any())
-                sReverse.Push(stack.Pop());
-            return sReverse;
-        }
     }
 }
