@@ -17,6 +17,24 @@ namespace BTreeSearchParent
             Value = node;
         }
 
+        public static void PrintNode(Node node, int padding)
+        {
+            if (node == null)
+            {
+                for (int i = 0; i < padding; i++)
+                    Console.Write("\t");
+                Console.WriteLine('*');
+            }
+            else
+            {
+                PrintNode(node.RightNode, padding + 1);
+                for (int i = 0; i < padding; i++)
+                    Console.Write("\t");
+                Console.WriteLine(node.Value);
+                PrintNode(node.LeftNode, padding + 1);
+            }
+        }        
+
         public static Node ParentFinder(Node head, Node leaf1, Node leaf2)
         {
             Stack<Node> sLeaf1 = new Stack<Node>();

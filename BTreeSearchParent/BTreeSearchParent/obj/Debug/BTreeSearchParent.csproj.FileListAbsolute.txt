@@ -1,0 +1,6 @@
+C:\Development\GCodes\Code2015\BTreeSearchParent\BTreeSearchParent\bin\Debug\BTreeSearchParent.exe.config
+C:\Development\GCodes\Code2015\BTreeSearchParent\BTreeSearchParent\obj\Debug\BTreeSearchParent.csprojResolveAssemblyReference.cache
+C:\Development\GCodes\Code2015\BTreeSearchParent\BTreeSearchParent\bin\Debug\BTreeSearchParent.exe
+C:\Development\GCodes\Code2015\BTreeSearchParent\BTreeSearchParent\bin\Debug\BTreeSearchParent.pdb
+C:\Development\GCodes\Code2015\BTreeSearchParent\BTreeSearchParent\obj\Debug\BTreeSearchParent.exe
+C:\Development\GCodes\Code2015\BTreeSearchParent\BTreeSearchParent\obj\Debug\BTreeSearchParent.pdb
